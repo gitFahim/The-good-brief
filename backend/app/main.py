@@ -16,6 +16,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+def root():
+    return {"message": "The Good Brief API", "status": "ok"}
 
 @app.on_event("startup")
 def on_startup() -> None:
