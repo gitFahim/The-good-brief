@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Good Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F4F6F2;
+    --card: #FFFFFF;
+    --ink: #1C2B26;
+    --ink-soft: #55645D;
+    --sage: #3F6C58;
+    --sage-light: #DCEAE1;
+    --gold: #C99A3B;
+    --line: #E3E7DF;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.5;
+  }
+  h1, h2, h3, .display { font-family: 'Fraunces', Georgia, serif; }
+  a { color: inherit; }
+
+  header {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 24px 16px;
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .brand h1 {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0;
+  }
+  .brand .tag {
+    color: var(--ink-soft);
+    font-size: 14px;
+  }
+
+  /* Signature element: the day's "warmth" gauge -- a real, live number
+     (share of today's stories that cleared the positive bar), not decoration. */
+  .warmth {
+    margin-top: 20px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .warmth-label { font-size: 13px; color: var(--ink-soft); min-width: 130px; }
+  .warmth-track {
+    flex: 1;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--sage-light);
+    overflow: hidden;
+  }
+  .warmth-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--sage));
+    border-radius: 999px;
+    transition: width 0.6s ease;
+    width: 0%;
+  }
+  .warmth-value { font-variant-numeric: tabular-nums; font-weight: 600; min-width: 48px; text-align: right; }
+
+  .tabs {
+    max-width: 960px;
+    margin: 20px auto 0;
+    padding: 0 24px;
+    display: flex;
+    gap: 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .tab-btn {
+    background: none;
+    border: none;
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    padding: 10px 0;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.2s;
+  }
+  .tab-btn:hover {
+    color: var(--ink);
+  }
+  .tab-btn.active {
+    color: var(--sage);
+  }
+  .tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--sage);
+    border-radius: 999px;
+  }
+
+  .filters {
+    max-width: 960px;
+    margin: 20px auto 0;
+    padding: 0 24px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .chip {
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink-soft);
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .chip.active {
+    background: var(--sage);
+    border-color: var(--sage);
+    color: white;
+  }
+
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 18px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    background: var(--sage-light);
+  }
+  .card-body { padding: 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .card-body .section {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--sage);
+    font-weight: 600;
+  }
+  .card-body h2 { font-size: 18px; margin: 0; line-height: 1.3; }
+  .card-body p { font-size: 14px; color: var(--ink-soft); margin: 0; flex: 1; }
+  .card-body a.read {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--sage);
+    text-decoration: none;
+    margin-top: 4px;
+  }
+
+  .empty, .loading {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--ink-soft);
+  }
+  .empty h3 { color: var(--ink); margin-bottom: 6px; }
+  footer {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px;
+    color: var(--ink-soft);
+    font-size: 13px;
+    border-top: 1px solid var(--line);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .warmth-fill { transition: none; }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1>The Good Brief</h1>
+      <span class="tag">news worth carrying with you</span>
+    </div>
+
+  </header>
+
+  <div class="tabs" id="tabs">
+    <button class="tab-btn active" data-region="global" onclick="switchRegion('global')">Global News</button>
+  </div>
+
+  <div class="filters" id="filters"></div>
+
+  <main id="grid">
+    <div class="loading">Loading today's stories…</div>
+  </main>
+
+  <footer>
+    Stories are pulled from the Guardian and kept only if they clear a
+    positivity bar — no doom, no filler. Source: Guardian Open Platform.
+  </footer>
+
+<script>
+  // Point this at your running backend (see backend/README or main.py).
+  const API_BASE = window.GOOD_BRIEF_API || "http://127.0.0.1:8000";
+
+  let currentSection = null;
+  let currentRegion = "global";
+
+  async function loadNews() {
+    const grid = document.getElementById("grid");
+    grid.innerHTML = '<div class="loading">Loading today\'s stories…</div>';
+    try {
+      const url = new URL(API_BASE + "/api/news");
+      url.searchParams.set("region", currentRegion);
+      if (currentSection) url.searchParams.set("section", currentSection);
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("API error " + res.status);
+      const articles = await res.json();
+      renderGrid(articles);
+      renderFilters(articles);
+
+    } catch (err) {
+      grid.innerHTML = `<div class="empty">
+        <h3>Can't reach the backend</h3>
+        <p>Make sure the API is running at ${API_BASE}. (${err.message})</p>
+      </div>`;
+    }
+  }
+
+
+
+  function renderFilters(articles) {
+    const box = document.getElementById("filters");
+    const sections = [...new Set(articles.map(a => a.section).filter(Boolean))];
+    box.innerHTML = "";
+    const allChip = makeChip("All", null);
+    box.appendChild(allChip);
+    sections.forEach(s => box.appendChild(makeChip(s, s)));
+  }
+
+  function makeChip(label, section) {
+    const el = document.createElement("button");
+    el.className = "chip" + (currentSection === section ? " active" : "");
+    el.textContent = label;
+    el.onclick = () => { currentSection = section; loadNews(); };
+    return el;
+  }
+
+  function renderGrid(articles) {
+    const grid = document.getElementById("grid");
+    if (!articles.length) {
+      grid.innerHTML = `<div class="empty">
+        <h3>No stories yet</h3>
+        <p>Run an ingestion pass on the backend to pull in today's good news.</p>
+      </div>`;
+      return;
+    }
+    grid.innerHTML = "";
+    articles.forEach(a => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        ${a.image_url ? `<img src="${a.image_url}" alt="">` : ""}
+        <div class="card-body">
+          <span class="section">${a.section || "general"}</span>
+          <h2>${escapeHtml(a.title)}</h2>
+          <p>${escapeHtml(a.summary || "")}</p>
+          <a class="read" href="${a.url}" target="_blank" rel="noopener">Read the full story →</a>
+        </div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  function escapeHtml(str) {
+    const d = document.createElement("div");
+    d.textContent = str;
+    return d.innerHTML;
+  }
+
+  function switchRegion(region) {
+    if (currentRegion === region) return;
+    currentRegion = region;
+    currentSection = null;
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.classList.toggle("active", btn.getAttribute("data-region") === region);
+    });
+    loadNews();
+  }
+
+  loadNews();
+</script>
+</body>
+</html>
